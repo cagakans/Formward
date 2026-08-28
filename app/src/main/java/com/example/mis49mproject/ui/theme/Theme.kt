@@ -42,7 +42,7 @@ private val FormwardDarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun MIS49MProjectTheme(
+fun FormwardTheme(
     darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
