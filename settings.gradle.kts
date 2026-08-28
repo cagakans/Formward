@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MIS 49M Project"
+rootProject.name = "Formward"
 include(":app")
