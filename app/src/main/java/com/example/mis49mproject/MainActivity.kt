@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.mis49mproject.navigation.AppNavigation
-import com.example.mis49mproject.ui.theme.MIS49MProjectTheme
+import com.example.mis49mproject.ui.theme.FormwardTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            MIS49MProjectTheme {
+            FormwardTheme {
                 AppNavigation()
             }
         }
