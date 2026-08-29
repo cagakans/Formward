@@ -22,7 +22,7 @@ Formward keeps workout planning, nutrition, daily habits and body progress in on
 - Progress history
 - Progress photo check-ins stored locally on the device
 - User profile and initial setup
-- Firebase-backed cloud storage for profile, workout, nutrition, score and progress data
+- Firebase-backed cloud storage for profile, workout, nutrition, score, and progress data
 
 ## App Screens
 
@@ -50,7 +50,7 @@ Formward keeps workout planning, nutrition, daily habits and body progress in on
 - Weekly score and streak tracking
 - Nutrition target calculation for calories, protein, carbohydrates, fat and water
 - Body fat estimation and measurement history
-- Separate Firebase storage logic for workout, nutrition, progress and profile data
+- Firebase data handling is separated for workout, nutrition, progress, and profile features
 - Anonymous Firebase Authentication for user-specific cloud data
 - Progress photos stored in the app's private local storage
 
