@@ -7,14 +7,14 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 
-data class GlowScoreResult(
+data class FormScoreResult(
     val dailyScore: Int,
     val weeklyScore: Int,
     val streak: Int
 )
 
-fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+fun calculateAndSaveFormScores(context: Context): FormScoreResult {
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val workoutPreferences = context.getSharedPreferences("workout_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
     val photoPreferences = context.getSharedPreferences("photo_checkin_data", Context.MODE_PRIVATE)
@@ -28,7 +28,7 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
     val todayDisplay = displayDateFormat.format(now)
     val todayName = SimpleDateFormat("EEEE", Locale.ENGLISH).format(now)
 
-    val missionDate = glowPreferences.getString("mission_date", "") ?: ""
+    val missionDate = formPreferences.getString("mission_date", "") ?: ""
     val isTodayMission = missionDate == todayKey
 
     fun toDouble(value: String): Double {
@@ -50,7 +50,7 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
     }
 
     fun loadDailyScores(): MutableMap<String, Int> {
-        val savedData = glowPreferences.getString("daily_scores_v1", "") ?: ""
+        val savedData = formPreferences.getString("daily_scores_v1", "") ?: ""
 
         return savedData
             .lines()
@@ -77,7 +77,7 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
             "${entry.key}|${entry.value.coerceIn(0, 100)}"
         }
 
-        glowPreferences.edit()
+        formPreferences.edit()
             .putString("daily_scores_v1", data)
             .apply()
     }
@@ -123,7 +123,7 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
 
     val recoveryDayToday =
         isTodayMission &&
-                glowPreferences.getBoolean("mission_recovery", false) &&
+                formPreferences.getBoolean("mission_recovery", false) &&
                 todayWorkoutExercises.isEmpty()
 
     val workoutScore = when {
@@ -204,7 +204,7 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
 
     // 3) Daily Missions: max 20
     val missionScoreRaw = if (isTodayMission) {
-        glowPreferences.getInt("mission_score", 0)
+        formPreferences.getInt("mission_score", 0)
     } else {
         0
     }.coerceIn(0, 100)
@@ -264,7 +264,7 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
         else -> 0
     }
 
-    val progressHistoryData = glowPreferences.getString("progress_history_v1", "") ?: ""
+    val progressHistoryData = formPreferences.getString("progress_history_v1", "") ?: ""
     val photoEntriesData = photoPreferences.getString("photo_entries", "") ?: ""
 
     val hasProgressThisWeek = (0..6).any { offset ->
@@ -298,14 +298,14 @@ fun calculateAndSaveGlowScores(context: Context): GlowScoreResult {
                     weeklyProgressBonus
             ).coerceIn(0, 100)
 
-    glowPreferences.edit()
+    formPreferences.edit()
         .putInt("last_score", dailyScore)
-        .putInt("today_glow_score", dailyScore)
-        .putInt("weekly_glow_score", weeklyScore)
+        .putInt("today_form_score", dailyScore)
+        .putInt("weekly_form_score", weeklyScore)
         .putInt("streak_count", streak)
         .apply()
 
-    return GlowScoreResult(
+    return FormScoreResult(
         dailyScore = dailyScore,
         weeklyScore = weeklyScore,
         streak = streak

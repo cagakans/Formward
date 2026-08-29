@@ -50,10 +50,10 @@ fun AppNavigation() {
     val navController = rememberNavController()
 
     val context = LocalContext.current
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
 
     var setupCompleted by remember {
-        mutableStateOf(glowPreferences.getBoolean("initial_setup_completed", false))
+        mutableStateOf(formPreferences.getBoolean("initial_setup_completed", false))
     }
 
     val bottomNavItems = listOf(

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mis49mproject.firebase.syncProgressDataToFirebase
 import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveGlowScores
+import com.example.mis49mproject.score.calculateAndSaveFormScores
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -63,7 +63,7 @@ fun ProgressScreen(
     onPhotoCheckInClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val sharedPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val photoPreferences = context.getSharedPreferences("photo_checkin_data", Context.MODE_PRIVATE)
 
     val selectedGender = sharedPreferences.getString("gender", null)
@@ -528,7 +528,7 @@ fun ProgressScreen(
                         measurementsSavedMessage = ""
                         historyMessage = ""
 
-                        calculateAndSaveGlowScores(context)
+                        calculateAndSaveFormScores(context)
                         syncProgressDataToFirebase(context)
                         syncUserDataToFirebase(context)
                     },
@@ -780,7 +780,7 @@ fun ProgressScreen(
                     bodyFatSavedMessage = ""
                     historyMessage = ""
 
-                    calculateAndSaveGlowScores(context)
+                    calculateAndSaveFormScores(context)
                     syncProgressDataToFirebase(context)
                     syncUserDataToFirebase(context)
                 },
@@ -841,7 +841,7 @@ fun ProgressScreen(
                         bodyFatSavedMessage = ""
                         measurementsSavedMessage = ""
 
-                        calculateAndSaveGlowScores(context)
+                        calculateAndSaveFormScores(context)
                         syncProgressDataToFirebase(context)
                         syncUserDataToFirebase(context)
                     }

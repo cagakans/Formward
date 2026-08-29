@@ -26,20 +26,20 @@ import androidx.compose.ui.unit.sp
 import com.example.mis49mproject.firebase.syncNutritionDataToFirebase
 import com.example.mis49mproject.firebase.syncProgressDataToFirebase
 import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveGlowScores
+import com.example.mis49mproject.score.calculateAndSaveFormScores
 
 @Composable
 fun ProfileScreen() {
     val context = LocalContext.current
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
 
     var selectedGender by remember {
-        mutableStateOf(glowPreferences.getString("gender", null))
+        mutableStateOf(formPreferences.getString("gender", null))
     }
 
     var selectedGoal by remember {
-        mutableStateOf(glowPreferences.getString("goal", null))
+        mutableStateOf(formPreferences.getString("goal", null))
     }
 
     var activityLevel by remember {
@@ -51,11 +51,11 @@ fun ProfileScreen() {
     }
 
     var height by remember {
-        mutableStateOf(glowPreferences.getString("height", "") ?: "")
+        mutableStateOf(formPreferences.getString("height", "") ?: "")
     }
 
     var weight by remember {
-        mutableStateOf(glowPreferences.getString("weight", "") ?: "")
+        mutableStateOf(formPreferences.getString("weight", "") ?: "")
     }
 
     var genderMenuExpanded by remember { mutableStateOf(false) }
@@ -64,11 +64,11 @@ fun ProfileScreen() {
 
     var savedMessage by remember { mutableStateOf("") }
 
-    val weeklyScore = glowPreferences.getInt("weekly_glow_score", 0)
-    val streakCount = glowPreferences.getInt("streak_count", 0)
+    val weeklyScore = formPreferences.getInt("weekly_form_score", 0)
+    val streakCount = formPreferences.getInt("streak_count", 0)
 
-    val latestBodyFat = glowPreferences.getString("latest_body_fat", "-") ?: "-"
-    val progressHistoryData = glowPreferences.getString("progress_history_v1", "") ?: ""
+    val latestBodyFat = formPreferences.getString("latest_body_fat", "-") ?: "-"
+    val progressHistoryData = formPreferences.getString("progress_history_v1", "") ?: ""
     val isGenderLocked = progressHistoryData.isNotBlank()
 
     val level = when {
@@ -479,7 +479,7 @@ fun ProfileScreen() {
                         return@Button
                     }
 
-                    glowPreferences.edit()
+                    formPreferences.edit()
                         .putString("gender", selectedGender)
                         .putString("height", height)
                         .putString("weight", weight)
@@ -491,7 +491,7 @@ fun ProfileScreen() {
                         .putString("activity_level", activityLevel)
                         .apply()
 
-                    calculateAndSaveGlowScores(context)
+                    calculateAndSaveFormScores(context)
                     syncProgressDataToFirebase(context)
                     syncNutritionDataToFirebase(context)
                     syncUserDataToFirebase(context)

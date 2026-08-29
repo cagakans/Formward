@@ -30,22 +30,22 @@ import com.example.mis49mproject.R
 import com.example.mis49mproject.firebase.syncNutritionDataToFirebase
 import com.example.mis49mproject.firebase.syncProgressDataToFirebase
 import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveGlowScores
+import com.example.mis49mproject.score.calculateAndSaveFormScores
 
 @Composable
 fun InitialSetupScreen(
     onSetupComplete: () -> Unit
 ) {
     val context = LocalContext.current
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
 
     var selectedGender by remember {
-        mutableStateOf(glowPreferences.getString("gender", null))
+        mutableStateOf(formPreferences.getString("gender", null))
     }
 
     var selectedGoal by remember {
-        mutableStateOf(glowPreferences.getString("goal", null))
+        mutableStateOf(formPreferences.getString("goal", null))
     }
 
     var activityLevel by remember {
@@ -53,11 +53,11 @@ fun InitialSetupScreen(
     }
 
     var height by remember {
-        mutableStateOf(glowPreferences.getString("height", "") ?: "")
+        mutableStateOf(formPreferences.getString("height", "") ?: "")
     }
 
     var weight by remember {
-        mutableStateOf(glowPreferences.getString("weight", "") ?: "")
+        mutableStateOf(formPreferences.getString("weight", "") ?: "")
     }
 
     var age by remember {
@@ -430,7 +430,7 @@ fun InitialSetupScreen(
                     return@Button
                 }
 
-                glowPreferences.edit()
+                formPreferences.edit()
                     .putString("gender", selectedGender)
                     .putString("height", height)
                     .putString("weight", weight)
@@ -443,7 +443,7 @@ fun InitialSetupScreen(
                     .putString("activity_level", activityLevel)
                     .apply()
 
-                calculateAndSaveGlowScores(context)
+                calculateAndSaveFormScores(context)
                 syncProgressDataToFirebase(context)
                 syncNutritionDataToFirebase(context)
                 syncUserDataToFirebase(context)

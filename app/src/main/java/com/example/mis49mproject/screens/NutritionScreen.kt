@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mis49mproject.firebase.syncNutritionDataToFirebase
 import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveGlowScores
+import com.example.mis49mproject.score.calculateAndSaveFormScores
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,7 +38,7 @@ fun NutritionScreen(
 ) {
     val context = LocalContext.current
 
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
 
     val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -46,10 +46,10 @@ fun NutritionScreen(
     val savedNutritionDate = nutritionPreferences.getString("nutrition_date", "") ?: ""
     val isTodayNutrition = savedNutritionDate == todayDate
 
-    val gender = glowPreferences.getString("gender", "") ?: ""
-    val height = glowPreferences.getString("height", "") ?: ""
-    val weight = glowPreferences.getString("weight", "") ?: ""
-    val goal = glowPreferences.getString("goal", "") ?: ""
+    val gender = formPreferences.getString("gender", "") ?: ""
+    val height = formPreferences.getString("height", "") ?: ""
+    val weight = formPreferences.getString("weight", "") ?: ""
+    val goal = formPreferences.getString("goal", "") ?: ""
 
     val age = nutritionPreferences.getString("age", "") ?: ""
     val activityLevel = nutritionPreferences.getString("activity_level", "") ?: ""
@@ -519,7 +519,7 @@ fun NutritionScreen(
                     intakeSavedMessage = ""
 
                     syncNutritionDataToFirebase(context)
-                    calculateAndSaveGlowScores(context)
+                    calculateAndSaveFormScores(context)
                     syncUserDataToFirebase(context)
                 },
                 modifier = Modifier
@@ -634,7 +634,7 @@ fun NutritionScreen(
                 calculationMessage = ""
 
                 syncNutritionDataToFirebase(context)
-                calculateAndSaveGlowScores(context)
+                calculateAndSaveFormScores(context)
                 syncUserDataToFirebase(context)
             },
             modifier = Modifier

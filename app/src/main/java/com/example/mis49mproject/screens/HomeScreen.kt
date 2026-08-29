@@ -42,16 +42,16 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
 
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val workoutPreferences = context.getSharedPreferences("workout_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
 
-    val todayGlowScore = glowPreferences.getInt("today_glow_score", 0)
-    val weeklyGlowScore = glowPreferences.getInt("weekly_glow_score", 0)
-    val streakCount = glowPreferences.getInt("streak_count", 0)
+    val todayFormScore = formPreferences.getInt("today_form_score", 0)
+    val weeklyFormScore = formPreferences.getInt("weekly_form_score", 0)
+    val streakCount = formPreferences.getInt("streak_count", 0)
 
-    val weight = glowPreferences.getString("weight", "-") ?: "-"
-    val latestBodyFat = glowPreferences.getString("latest_body_fat", "-") ?: "-"
+    val weight = formPreferences.getString("weight", "-") ?: "-"
+    val latestBodyFat = formPreferences.getString("latest_body_fat", "-") ?: "-"
 
     val todayKey = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     val todayDisplay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
@@ -110,30 +110,30 @@ fun HomeScreen(
     }
 
     // Mission summary
-    val missionDate = glowPreferences.getString("mission_date", "") ?: ""
+    val missionDate = formPreferences.getString("mission_date", "") ?: ""
     val isTodayMission = missionDate == todayKey
     val hasWorkoutPlanToday = totalToday > 0
 
     val missionWorkout = isTodayMission && hasWorkoutPlanToday &&
-            glowPreferences.getBoolean("mission_workout", false)
+            formPreferences.getBoolean("mission_workout", false)
 
     val missionRecovery = isTodayMission && !hasWorkoutPlanToday &&
-            glowPreferences.getBoolean("mission_recovery", false)
+            formPreferences.getBoolean("mission_recovery", false)
 
     val missionNutrition = isTodayMission &&
-            glowPreferences.getBoolean("mission_nutrition", false)
+            formPreferences.getBoolean("mission_nutrition", false)
 
     val missionWater = isTodayMission &&
-            glowPreferences.getBoolean("mission_water", false)
+            formPreferences.getBoolean("mission_water", false)
 
     val missionMovement = isTodayMission &&
-            glowPreferences.getBoolean(
+            formPreferences.getBoolean(
                 "mission_movement",
-                glowPreferences.getBoolean("mission_steps", false)
+                formPreferences.getBoolean("mission_steps", false)
             )
 
     val missionSleep = isTodayMission &&
-            glowPreferences.getBoolean("mission_sleep", false)
+            formPreferences.getBoolean("mission_sleep", false)
 
     val missionCompletedCount = listOf(
         missionWorkout || missionRecovery,
@@ -239,9 +239,9 @@ fun HomeScreen(
     }
 
     val scoreMessage = when {
-        todayGlowScore >= 85 -> "Elite day"
-        todayGlowScore >= 60 -> "Strong momentum"
-        todayGlowScore > 0 -> "Keep building discipline"
+        todayFormScore >= 85 -> "Elite day"
+        todayFormScore >= 60 -> "Strong momentum"
+        todayFormScore > 0 -> "Keep building discipline"
         else -> "Start your day"
     }
 
@@ -323,7 +323,7 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.height(1.dp))
 
                         Text(
-                            text = "$todayGlowScore",
+                            text = "$todayFormScore",
                             fontSize = 34.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -341,7 +341,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(1.dp))
 
                 Text(
-                    text = "$scoreMessage • $todayGlowScore / 100",
+                    text = "$scoreMessage • $todayFormScore / 100",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -349,7 +349,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(7.dp))
 
                 LinearProgressIndicator(
-                    progress = { todayGlowScore / 100f },
+                    progress = { todayFormScore / 100f },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(5.dp)
@@ -363,7 +363,7 @@ fun HomeScreen(
                 Row(modifier = Modifier.fillMaxWidth()) {
                     MiniStat(
                         title = "Weekly",
-                        value = "$weeklyGlowScore / 100",
+                        value = "$weeklyFormScore / 100",
                         modifier = Modifier.weight(1f)
                     )
 

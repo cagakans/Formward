@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mis49mproject.firebase.syncUserDataToFirebase
 import com.example.mis49mproject.firebase.syncWorkoutDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveGlowScores
+import com.example.mis49mproject.score.calculateAndSaveFormScores
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -263,7 +263,7 @@ fun WorkoutLogScreen() {
             .apply()
 
         syncWorkoutDataToFirebase(context)
-        calculateAndSaveGlowScores(context)
+        calculateAndSaveFormScores(context)
         syncUserDataToFirebase(context)
     }
 
@@ -277,7 +277,7 @@ fun WorkoutLogScreen() {
             .apply()
 
         syncWorkoutDataToFirebase(context)
-        calculateAndSaveGlowScores(context)
+        calculateAndSaveFormScores(context)
         syncUserDataToFirebase(context)
     }
 

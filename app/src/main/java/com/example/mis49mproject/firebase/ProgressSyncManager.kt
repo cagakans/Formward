@@ -13,7 +13,7 @@ fun syncProgressDataToFirebase(
     context: Context,
     onComplete: ((String) -> Unit)? = null
 ) {
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
 
     val auth = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
@@ -61,26 +61,26 @@ fun syncProgressDataToFirebase(
             Locale.getDefault()
         ).format(Date())
 
-        val progressHistoryData = glowPreferences.getString("progress_history_v1", "") ?: ""
+        val progressHistoryData = formPreferences.getString("progress_history_v1", "") ?: ""
         val progressHistoryList = parseProgressHistory(progressHistoryData)
 
-        val latestBodyFat = glowPreferences.getString("latest_body_fat", "-") ?: "-"
+        val latestBodyFat = formPreferences.getString("latest_body_fat", "-") ?: "-"
 
         val progressCloudData = hashMapOf<String, Any>(
-            "gender" to (glowPreferences.getString("gender", "") ?: ""),
+            "gender" to (formPreferences.getString("gender", "") ?: ""),
 
-            "height" to (glowPreferences.getString("height", "") ?: ""),
-            "weight" to (glowPreferences.getString("weight", "") ?: ""),
-            "neck" to (glowPreferences.getString("neck", "") ?: ""),
-            "waist" to (glowPreferences.getString("waist", "") ?: ""),
-            "hip" to (glowPreferences.getString("hip", "") ?: ""),
+            "height" to (formPreferences.getString("height", "") ?: ""),
+            "weight" to (formPreferences.getString("weight", "") ?: ""),
+            "neck" to (formPreferences.getString("neck", "") ?: ""),
+            "waist" to (formPreferences.getString("waist", "") ?: ""),
+            "hip" to (formPreferences.getString("hip", "") ?: ""),
 
-            "chest" to (glowPreferences.getString("chest", "") ?: ""),
-            "shoulders" to (glowPreferences.getString("shoulders", "") ?: ""),
-            "arm" to (glowPreferences.getString("arm", "") ?: ""),
-            "forearm" to (glowPreferences.getString("forearm", "") ?: ""),
-            "thigh" to (glowPreferences.getString("thigh", "") ?: ""),
-            "calf" to (glowPreferences.getString("calf", "") ?: ""),
+            "chest" to (formPreferences.getString("chest", "") ?: ""),
+            "shoulders" to (formPreferences.getString("shoulders", "") ?: ""),
+            "arm" to (formPreferences.getString("arm", "") ?: ""),
+            "forearm" to (formPreferences.getString("forearm", "") ?: ""),
+            "thigh" to (formPreferences.getString("thigh", "") ?: ""),
+            "calf" to (formPreferences.getString("calf", "") ?: ""),
 
             "latestBodyFat" to latestBodyFat,
 

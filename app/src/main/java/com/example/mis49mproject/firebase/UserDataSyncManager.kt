@@ -13,7 +13,7 @@ fun syncUserDataToFirebase(
     context: Context,
     onComplete: ((String) -> Unit)? = null
 ) {
-    val glowPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
     val photoPreferences = context.getSharedPreferences("photo_checkin_data", Context.MODE_PRIVATE)
 
@@ -75,7 +75,7 @@ fun syncUserDataToFirebase(
             Locale.getDefault()
         ).format(Date())
 
-        val dailyScoresData = glowPreferences.getString("daily_scores_v1", "") ?: ""
+        val dailyScoresData = formPreferences.getString("daily_scores_v1", "") ?: ""
         val dailyScoresList = parseDailyScores(dailyScoresData)
 
         val photoEntriesData = photoPreferences.getString("photo_entries", "") ?: ""
@@ -89,18 +89,18 @@ fun syncUserDataToFirebase(
             ?.toString()
             ?: ""
 
-        val missionMovement = glowPreferences.getBoolean(
+        val missionMovement = formPreferences.getBoolean(
             "mission_movement",
-            glowPreferences.getBoolean("mission_steps", false)
+            formPreferences.getBoolean("mission_steps", false)
         )
 
         val userCloudData = hashMapOf<String, Any>(
             // Profile basics
-            "gender" to (glowPreferences.getString("gender", "") ?: ""),
-            "height" to (glowPreferences.getString("height", "") ?: ""),
-            "weight" to (glowPreferences.getString("weight", "") ?: ""),
-            "goal" to (glowPreferences.getString("goal", "") ?: ""),
-            "latestBodyFat" to (glowPreferences.getString("latest_body_fat", "-") ?: "-"),
+            "gender" to (formPreferences.getString("gender", "") ?: ""),
+            "height" to (formPreferences.getString("height", "") ?: ""),
+            "weight" to (formPreferences.getString("weight", "") ?: ""),
+            "goal" to (formPreferences.getString("goal", "") ?: ""),
+            "latestBodyFat" to (formPreferences.getString("latest_body_fat", "-") ?: "-"),
 
             // Nutrition profile details
             "age" to (nutritionPreferences.getString("age", "") ?: ""),
@@ -109,10 +109,10 @@ fun syncUserDataToFirebase(
 
             // Scores
             "todayDate" to todayDate,
-            "todayGlowScore" to glowPreferences.getInt("today_glow_score", 0),
-            "weeklyGlowScore" to glowPreferences.getInt("weekly_glow_score", 0),
-            "streakCount" to glowPreferences.getInt("streak_count", 0),
-            "lastScore" to glowPreferences.getInt("last_score", 0),
+            "todayFormScore" to formPreferences.getInt("today_form_score", 0),
+            "weeklyFormScore" to formPreferences.getInt("weekly_form_score", 0),
+            "streakCount" to formPreferences.getInt("streak_count", 0),
+            "lastScore" to formPreferences.getInt("last_score", 0),
 
             // Keep raw score data for compatibility
             "dailyScoresData" to dailyScoresData,
@@ -121,21 +121,21 @@ fun syncUserDataToFirebase(
             "dailyScores" to dailyScoresList,
 
             // Mission
-            "missionDate" to (glowPreferences.getString("mission_date", "") ?: ""),
-            "missionWorkout" to glowPreferences.getBoolean("mission_workout", false),
-            "missionRecovery" to glowPreferences.getBoolean("mission_recovery", false),
-            "missionNutrition" to glowPreferences.getBoolean("mission_nutrition", false),
-            "missionWater" to glowPreferences.getBoolean("mission_water", false),
+            "missionDate" to (formPreferences.getString("mission_date", "") ?: ""),
+            "missionWorkout" to formPreferences.getBoolean("mission_workout", false),
+            "missionRecovery" to formPreferences.getBoolean("mission_recovery", false),
+            "missionNutrition" to formPreferences.getBoolean("mission_nutrition", false),
+            "missionWater" to formPreferences.getBoolean("mission_water", false),
             "missionMovement" to missionMovement,
 
             // Keep old key for compatibility
             "missionSteps" to missionMovement,
 
-            "missionSleep" to glowPreferences.getBoolean("mission_sleep", false),
-            "missionScore" to glowPreferences.getInt("mission_score", 0),
+            "missionSleep" to formPreferences.getBoolean("mission_sleep", false),
+            "missionScore" to formPreferences.getInt("mission_score", 0),
 
             // Setup
-            "initialSetupCompleted" to glowPreferences.getBoolean("initial_setup_completed", false),
+            "initialSetupCompleted" to formPreferences.getBoolean("initial_setup_completed", false),
 
             // Photo check-in
             "photoEntryCount" to photoEntryCount,

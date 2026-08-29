@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveGlowScores
+import com.example.mis49mproject.score.calculateAndSaveFormScores
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -35,7 +35,7 @@ import kotlin.math.roundToInt
 fun CheckInScreen() {
     val context = LocalContext.current
 
-    val sharedPreferences = context.getSharedPreferences("glowup_data", Context.MODE_PRIVATE)
+    val sharedPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val workoutPreferences = context.getSharedPreferences("workout_data", Context.MODE_PRIVATE)
 
     val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -355,7 +355,7 @@ fun CheckInScreen() {
                     .putInt("mission_score", missionScore)
                     .apply()
 
-                val result = calculateAndSaveGlowScores(context)
+                val result = calculateAndSaveFormScores(context)
                 syncUserDataToFirebase(context)
 
                 savedMessage =
