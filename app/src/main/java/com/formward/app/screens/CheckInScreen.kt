@@ -1,4 +1,4 @@
-package com.example.mis49mproject.screens
+package com.formward.app.screens
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -24,12 +24,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveFormScores
+import com.formward.app.firebase.syncUserDataToFirebase
+import com.formward.app.score.calculateAndSaveFormScores
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.math.roundToInt
 
 @Composable
 fun CheckInScreen() {

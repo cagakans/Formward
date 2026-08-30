@@ -1,4 +1,4 @@
-package com.example.mis49mproject.score
+package com.formward.app.score
 
 import android.content.Context
 import java.text.SimpleDateFormat

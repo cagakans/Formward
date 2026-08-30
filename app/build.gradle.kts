@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mis49mproject"
+    namespace = "com.formward.app"
 
     compileSdk {
         version = release(36) {
@@ -14,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.mis49mproject"
+        applicationId = "com.formward.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

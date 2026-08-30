@@ -1,4 +1,4 @@
-package com.example.mis49mproject.firebase
+package com.formward.app.firebase
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth

@@ -1,41 +1,35 @@
-package com.example.mis49mproject.screens
+package com.formward.app.screens
 
 import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mis49mproject.R
-import com.example.mis49mproject.firebase.syncNutritionDataToFirebase
-import com.example.mis49mproject.firebase.syncProgressDataToFirebase
-import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveFormScores
+import com.formward.app.firebase.syncNutritionDataToFirebase
+import com.formward.app.firebase.syncProgressDataToFirebase
+import com.formward.app.firebase.syncUserDataToFirebase
+import com.formward.app.score.calculateAndSaveFormScores
 
 @Composable
-fun InitialSetupScreen(
-    onSetupComplete: () -> Unit
-) {
+fun ProfileScreen() {
     val context = LocalContext.current
     val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val nutritionPreferences = context.getSharedPreferences("nutrition_data", Context.MODE_PRIVATE)
@@ -52,6 +46,10 @@ fun InitialSetupScreen(
         mutableStateOf(nutritionPreferences.getString("activity_level", null))
     }
 
+    var age by remember {
+        mutableStateOf(nutritionPreferences.getString("age", "") ?: "")
+    }
+
     var height by remember {
         mutableStateOf(formPreferences.getString("height", "") ?: "")
     }
@@ -60,15 +58,34 @@ fun InitialSetupScreen(
         mutableStateOf(formPreferences.getString("weight", "") ?: "")
     }
 
-    var age by remember {
-        mutableStateOf(nutritionPreferences.getString("age", "") ?: "")
-    }
-
     var genderMenuExpanded by remember { mutableStateOf(false) }
     var goalMenuExpanded by remember { mutableStateOf(false) }
     var activityMenuExpanded by remember { mutableStateOf(false) }
 
-    var message by remember { mutableStateOf("") }
+    var savedMessage by remember { mutableStateOf("") }
+
+    val weeklyScore = formPreferences.getInt("weekly_form_score", 0)
+    val streakCount = formPreferences.getInt("streak_count", 0)
+
+    val latestBodyFat = formPreferences.getString("latest_body_fat", "-") ?: "-"
+    val progressHistoryData = formPreferences.getString("progress_history_v1", "") ?: ""
+    val isGenderLocked = progressHistoryData.isNotBlank()
+
+    val level = when {
+        weeklyScore >= 90 -> "Elite"
+        weeklyScore >= 75 -> "Advanced"
+        weeklyScore >= 50 -> "Consistent"
+        weeklyScore > 0 -> "Building"
+        else -> "Getting Started"
+    }
+
+    val levelMessage = when (level) {
+        "Elite" -> "Very strong weekly performance."
+        "Advanced" -> "Strong weekly momentum."
+        "Consistent" -> "You are staying consistent."
+        "Building" -> "You are building discipline."
+        else -> "Complete daily actions to build your level."
+    }
 
     val genderOptions = listOf("Male", "Female")
 
@@ -122,7 +139,7 @@ fun InitialSetupScreen(
             .toDoubleOrNull() ?: 0.0
     }
 
-    fun setupValidationMessage(): String {
+    fun profileValidationMessage(): String {
         val ageValue = toDouble(age)
         val heightValue = toDouble(height)
         val weightValue = toDouble(weight)
@@ -148,6 +165,23 @@ fun InitialSetupScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 14.dp)
     ) {
+        Text(
+            text = "Profile",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        Text(
+            text = "Manage your profile and fitness goal.",
+            fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
@@ -155,7 +189,7 @@ fun InitialSetupScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
@@ -166,43 +200,61 @@ fun InitialSetupScreen(
                             )
                         )
                     )
-                    .padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(14.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.formward_logo),
-                    contentDescription = "Formward Logo",
-                    modifier = Modifier
-                        .size(66.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "Profile",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .padding(9.dp)
+                                .size(38.dp)
+                        )
+                    }
 
-                Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.width(11.dp))
 
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Welcome to Formward",
-                        fontSize = 22.sp,
-                        lineHeight = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Your Formward Profile",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(2.dp))
+
+                        Text(
+                            text = levelMessage,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    ProfileMiniStat(
+                        title = "Level",
+                        value = level,
+                        modifier = Modifier.weight(1f)
                     )
 
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                    Text(
-                        text = "Forward Your Form",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "Set up your profile once. You can edit it later.",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    ProfileMiniStat(
+                        title = "Streak",
+                        value = "$streakCount days",
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -210,18 +262,25 @@ fun InitialSetupScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        SetupSectionCard(
-            icon = Icons.Filled.Person,
-            title = "Setup Details"
+        ProfileSectionCard(
+            icon = Icons.Filled.Edit,
+            title = "Profile Details"
         ) {
             Text(
-                text = "Basic Information",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
+                text = "Edit your core details for nutrition targets and progress tracking.",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = "Gender",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             Box {
                 OutlinedButton(
@@ -229,6 +288,7 @@ fun InitialSetupScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(46.dp),
+                    enabled = !isGenderLocked,
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
@@ -248,81 +308,64 @@ fun InitialSetupScreen(
                             onClick = {
                                 selectedGender = gender
                                 genderMenuExpanded = false
-                                message = ""
+                                savedMessage = ""
                             }
                         )
                     }
                 }
             }
 
+            if (isGenderLocked) {
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = "Gender is locked after the first progress log.",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
 
-            SetupNumberField(
+            ProfileNumberField(
                 value = age,
                 onValueChange = {
                     age = numberOnly(it)
-                    message = ""
+                    savedMessage = ""
                 },
                 label = "Age",
                 keyboardType = KeyboardType.Number
             )
 
-            SetupNumberField(
+            ProfileNumberField(
                 value = height,
                 onValueChange = {
                     height = decimalOnly(it)
-                    message = ""
+                    savedMessage = ""
                 },
                 label = "Height (cm)",
                 keyboardType = KeyboardType.Decimal
             )
 
-            SetupNumberField(
+            ProfileNumberField(
                 value = weight,
                 onValueChange = {
                     weight = decimalOnly(it)
-                    message = ""
+                    savedMessage = ""
                 },
                 label = "Weight (kg)",
                 keyboardType = KeyboardType.Decimal
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Divider(
-                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
+            Text(
+                text = "Goal",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(11.dp),
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Flag,
-                        contentDescription = "Goal",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(7.dp)
-                            .size(17.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Text(
-                    text = "Goal & Activity",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Box {
                 OutlinedButton(
@@ -349,7 +392,7 @@ fun InitialSetupScreen(
                             onClick = {
                                 selectedGoal = goal
                                 goalMenuExpanded = false
-                                message = ""
+                                savedMessage = ""
                             }
                         )
                     }
@@ -357,6 +400,14 @@ fun InitialSetupScreen(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Activity Level",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             Box {
                 OutlinedButton(
@@ -383,7 +434,7 @@ fun InitialSetupScreen(
                             onClick = {
                                 activityLevel = activity
                                 activityMenuExpanded = false
-                                message = ""
+                                savedMessage = ""
                             }
                         )
                     }
@@ -398,87 +449,84 @@ fun InitialSetupScreen(
                 color = MaterialTheme.colorScheme.background.copy(alpha = 0.55f)
             ) {
                 Row(
-                    modifier = Modifier.padding(11.dp),
+                    modifier = Modifier.padding(horizontal = 11.dp, vertical = 9.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Bolt,
-                        contentDescription = "Setup",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(17.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
                     Text(
-                        text = "These values personalize nutrition targets, progress tracking and daily focus.",
+                        text = "Body Fat",
+                        modifier = Modifier.weight(1f),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
+                    Text(
+                        text = if (latestBodyFat == "-") "-" else "$latestBodyFat% • from Progress",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-        Button(
-            onClick = {
-                val validation = setupValidationMessage()
+            Button(
+                onClick = {
+                    val validation = profileValidationMessage()
 
-                if (validation.isNotBlank()) {
-                    message = validation
-                    return@Button
-                }
+                    if (validation.isNotBlank()) {
+                        savedMessage = validation
+                        return@Button
+                    }
 
-                formPreferences.edit()
-                    .putString("gender", selectedGender)
-                    .putString("height", height)
-                    .putString("weight", weight)
-                    .putString("goal", selectedGoal)
-                    .putBoolean("initial_setup_completed", true)
-                    .apply()
+                    formPreferences.edit()
+                        .putString("gender", selectedGender)
+                        .putString("height", height)
+                        .putString("weight", weight)
+                        .putString("goal", selectedGoal)
+                        .apply()
 
-                nutritionPreferences.edit()
-                    .putString("age", age)
-                    .putString("activity_level", activityLevel)
-                    .apply()
+                    nutritionPreferences.edit()
+                        .putString("age", age)
+                        .putString("activity_level", activityLevel)
+                        .apply()
 
-                calculateAndSaveFormScores(context)
-                syncProgressDataToFirebase(context)
-                syncNutritionDataToFirebase(context)
-                syncUserDataToFirebase(context)
+                    calculateAndSaveFormScores(context)
+                    syncProgressDataToFirebase(context)
+                    syncNutritionDataToFirebase(context)
+                    syncUserDataToFirebase(context)
 
-                message = "Setup completed."
-                onSetupComplete()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.CheckCircle,
-                contentDescription = "Complete Setup",
-                modifier = Modifier.size(18.dp)
-            )
+                    savedMessage = "Profile updated."
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(46.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Save,
+                    contentDescription = "Save Profile",
+                    modifier = Modifier.size(17.dp)
+                )
 
-            Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(7.dp))
 
-            Text(
-                text = "Complete Setup",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+                Text(
+                    text = "Save Profile",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
 
-        if (message.isNotBlank()) {
-            Spacer(modifier = Modifier.height(8.dp))
+            if (savedMessage.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = message,
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+                Text(
+                    text = savedMessage,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(70.dp))
@@ -486,7 +534,37 @@ fun InitialSetupScreen(
 }
 
 @Composable
-fun SetupSectionCard(
+fun ProfileMiniStat(
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.background.copy(alpha = 0.55f)
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 11.dp, vertical = 9.dp)) {
+            Text(
+                text = title,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            Text(
+                text = value,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun ProfileSectionCard(
     icon: ImageVector,
     title: String,
     content: @Composable ColumnScope.() -> Unit
@@ -536,12 +614,11 @@ fun SetupSectionCard(
 }
 
 @Composable
-fun SetupNumberField(
+fun ProfileNumberField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    keyboardType: KeyboardType,
-    modifier: Modifier = Modifier
+    keyboardType: KeyboardType
 ) {
     OutlinedTextField(
         value = value,
@@ -550,7 +627,7 @@ fun SetupNumberField(
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
         ),
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         singleLine = true,

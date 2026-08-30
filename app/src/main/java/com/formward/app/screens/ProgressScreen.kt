@@ -1,4 +1,4 @@
-package com.example.mis49mproject.screens
+package com.formward.app.screens
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -32,9 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mis49mproject.firebase.syncProgressDataToFirebase
-import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveFormScores
+import com.formward.app.firebase.syncProgressDataToFirebase
+import com.formward.app.firebase.syncUserDataToFirebase
+import com.formward.app.score.calculateAndSaveFormScores
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date

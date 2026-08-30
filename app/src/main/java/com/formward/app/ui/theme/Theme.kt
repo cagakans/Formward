@@ -1,4 +1,4 @@
-package com.example.mis49mproject.ui.theme
+package com.formward.app.ui.theme
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme

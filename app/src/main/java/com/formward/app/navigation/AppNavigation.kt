@@ -1,4 +1,4 @@
-package com.example.mis49mproject.navigation
+package com.formward.app.navigation
 
 import android.content.Context
 import androidx.compose.foundation.layout.padding
@@ -29,14 +29,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mis49mproject.screens.CheckInScreen
-import com.example.mis49mproject.screens.HomeScreen
-import com.example.mis49mproject.screens.InitialSetupScreen
-import com.example.mis49mproject.screens.NutritionScreen
-import com.example.mis49mproject.screens.PhotoCheckInScreen
-import com.example.mis49mproject.screens.ProfileScreen
-import com.example.mis49mproject.screens.ProgressScreen
-import com.example.mis49mproject.screens.WorkoutLogScreen
+import com.formward.app.screens.CheckInScreen
+import com.formward.app.screens.HomeScreen
+import com.formward.app.screens.InitialSetupScreen
+import com.formward.app.screens.NutritionScreen
+import com.formward.app.screens.PhotoCheckInScreen
+import com.formward.app.screens.ProfileScreen
+import com.formward.app.screens.ProgressScreen
+import com.formward.app.screens.WorkoutLogScreen
 import androidx.compose.material.icons.filled.Assignment
 
 data class BottomNavItem(

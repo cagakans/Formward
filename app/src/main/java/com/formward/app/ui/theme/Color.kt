@@ -1,4 +1,4 @@
-package com.example.mis49mproject.ui.theme
+package com.formward.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

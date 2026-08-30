@@ -1,4 +1,4 @@
-package com.example.mis49mproject.screens
+package com.formward.app.screens
 
 import android.Manifest
 import android.content.Context
@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.example.mis49mproject.firebase.syncUserDataToFirebase
-import com.example.mis49mproject.score.calculateAndSaveFormScores
+import com.formward.app.firebase.syncUserDataToFirebase
+import com.formward.app.score.calculateAndSaveFormScores
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date

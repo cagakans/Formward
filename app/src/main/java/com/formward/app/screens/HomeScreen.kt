@@ -1,5 +1,6 @@
-package com.example.mis49mproject.screens
+package com.formward.app.screens
 
+import com.formward.app.R
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,8 +29,6 @@ import java.util.Date
 import java.util.Locale
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import com.example.mis49mproject.R
 
 
 @Composable
