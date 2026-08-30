@@ -44,16 +44,14 @@ fun syncUserDataToFirebase(
             }
     }
 
-    fun parsePhotoEntries(photoEntriesData: String): List<Map<String, Any>> {
+    fun parsePhotoMetadata(photoEntriesData: String): List<Map<String, Any>> {
         return photoEntriesData
             .lines()
             .filter { it.isNotBlank() }
             .mapNotNull { line ->
                 val parts = line.split("|")
-
                 if (parts.size == 2) {
                     mapOf(
-                        "path" to parts[0],
                         "date" to parts[1]
                     )
                 } else {
@@ -79,11 +77,10 @@ fun syncUserDataToFirebase(
         val dailyScoresList = parseDailyScores(dailyScoresData)
 
         val photoEntriesData = photoPreferences.getString("photo_entries", "") ?: ""
-        val photoEntriesList = parsePhotoEntries(photoEntriesData)
+        val photoMetadataList = parsePhotoMetadata(photoEntriesData)
 
-        val photoEntryCount = photoEntriesList.size
-
-        val latestPhotoDate = photoEntriesList
+        val photoEntryCount = photoMetadataList.size
+        val latestPhotoDate = photoMetadataList
             .firstOrNull()
             ?.get("date")
             ?.toString()
@@ -140,12 +137,8 @@ fun syncUserDataToFirebase(
             // Photo check-in
             "photoEntryCount" to photoEntryCount,
             "latestPhotoDate" to latestPhotoDate,
-
-            // Keep raw photo metadata for compatibility
-            "photoEntriesData" to photoEntriesData,
-
-            // Structured photo metadata
-            "photoEntries" to photoEntriesList,
+            "photoEntriesData" to FieldValue.delete(),
+            "photoEntries" to photoMetadataList,
 
             "lastUpdated" to FieldValue.serverTimestamp()
         )
