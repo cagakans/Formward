@@ -6,7 +6,7 @@ import org.junit.Test
 class FormScoreManagerTest {
 
     @Test
-    fun `perfect nutrition reaches maximum score`() {
+    fun perfectNutritionReachesMaximumScore() {
         val score = calculateNutritionScore(
             calorieTarget = 2000.0,
             calorieConsumed = 2000.0,
@@ -22,7 +22,7 @@ class FormScoreManagerTest {
     }
 
     @Test
-    fun `partial nutrition produces partial score`() {
+    fun partialNutritionProducesPartialScore() {
         val score = calculateNutritionScore(
             calorieTarget = 2000.0,
             calorieConsumed = 1000.0,
@@ -38,7 +38,7 @@ class FormScoreManagerTest {
     }
 
     @Test
-    fun `empty nutrition data produces zero score`() {
+    fun emptyNutritionDataProducesZeroScore() {
         val score = calculateNutritionScore(
             calorieTarget = 0.0,
             calorieConsumed = 0.0,
@@ -54,14 +54,14 @@ class FormScoreManagerTest {
     }
 
     @Test
-    fun `mission score scales from zero to twenty`() {
+    fun missionScoreScalesFromZeroToTwenty() {
         assertEquals(0, calculateMissionScore(0))
         assertEquals(10, calculateMissionScore(50))
         assertEquals(20, calculateMissionScore(100))
     }
 
     @Test
-    fun `daily score combines all score components`() {
+    fun dailyScoreCombinesAllScoreComponents() {
         val score = calculateDailyScore(
             workoutScore = 40,
             nutritionScore = 40,
@@ -72,7 +72,7 @@ class FormScoreManagerTest {
     }
 
     @Test
-    fun `daily score cannot exceed one hundred`() {
+    fun dailyScoreCannotExceedOneHundred() {
         val score = calculateDailyScore(
             workoutScore = 50,
             nutritionScore = 50,
