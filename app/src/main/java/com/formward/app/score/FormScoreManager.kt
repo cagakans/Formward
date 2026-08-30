@@ -13,6 +13,55 @@ data class FormScoreResult(
     val streak: Int
 )
 
+internal fun calculateNutritionScore(
+    calorieTarget: Double,
+    calorieConsumed: Double,
+    proteinTarget: Double,
+    proteinConsumed: Double,
+    waterTarget: Double,
+    waterConsumed: Double,
+    hasCarbs: Boolean,
+    hasFat: Boolean
+): Int {
+    var score = 0
+
+    if (calorieTarget > 0 && calorieConsumed > 0) {
+        val ratio = calorieConsumed / calorieTarget
+        score += if (ratio in 0.80..1.10) 12 else 6
+    }
+
+    if (proteinTarget > 0 && proteinConsumed > 0) {
+        val ratio = proteinConsumed / proteinTarget
+        score += if (ratio >= 0.80) 12 else 6
+    }
+
+    if (waterTarget > 0 && waterConsumed > 0) {
+        val ratio = waterConsumed / waterTarget
+        score += if (ratio >= 0.80) 10 else 5
+    }
+
+    if (hasCarbs && hasFat) {
+        score += 6
+    }
+
+    return score.coerceIn(0, 40)
+}
+
+internal fun calculateMissionScore(missionScoreRaw: Int): Int {
+    return ((missionScoreRaw.coerceIn(0, 100) / 100.0) * 20.0)
+        .roundToInt()
+        .coerceIn(0, 20)
+}
+
+internal fun calculateDailyScore(
+    workoutScore: Int,
+    nutritionScore: Int,
+    missionScore: Int
+): Int {
+    return (workoutScore + nutritionScore + missionScore)
+        .coerceIn(0, 100)
+}
+
 fun calculateAndSaveFormScores(context: Context): FormScoreResult {
     val formPreferences = context.getSharedPreferences("formward_data", Context.MODE_PRIVATE)
     val workoutPreferences = context.getSharedPreferences("workout_data", Context.MODE_PRIVATE)
@@ -179,28 +228,16 @@ fun calculateAndSaveFormScores(context: Context): FormScoreResult {
         ""
     }
 
-    var nutritionScore = 0
-
-    if (calorieTarget > 0 && calorieConsumed > 0) {
-        val ratio = calorieConsumed / calorieTarget
-        nutritionScore += if (ratio in 0.80..1.10) 12 else 6
-    }
-
-    if (proteinTarget > 0 && proteinConsumed > 0) {
-        val ratio = proteinConsumed / proteinTarget
-        nutritionScore += if (ratio >= 0.80) 12 else 6
-    }
-
-    if (waterTarget > 0 && waterConsumed > 0) {
-        val ratio = waterConsumed / waterTarget
-        nutritionScore += if (ratio >= 0.80) 10 else 5
-    }
-
-    if (carbsConsumed.isNotBlank() && fatConsumed.isNotBlank()) {
-        nutritionScore += 6
-    }
-
-    nutritionScore = nutritionScore.coerceIn(0, 40)
+    val nutritionScore = calculateNutritionScore(
+        calorieTarget = calorieTarget,
+        calorieConsumed = calorieConsumed,
+        proteinTarget = proteinTarget,
+        proteinConsumed = proteinConsumed,
+        waterTarget = waterTarget,
+        waterConsumed = waterConsumed,
+        hasCarbs = carbsConsumed.isNotBlank(),
+        hasFat = fatConsumed.isNotBlank()
+    )
 
     // 3) Daily Missions: max 20
     val missionScoreRaw = if (isTodayMission) {
@@ -209,16 +246,14 @@ fun calculateAndSaveFormScores(context: Context): FormScoreResult {
         0
     }.coerceIn(0, 100)
 
-    val missionScore = ((missionScoreRaw / 100.0) * 20.0)
-        .roundToInt()
-        .coerceIn(0, 20)
+    val missionScore = calculateMissionScore(missionScoreRaw)
 
     // Daily Score: max 100
-    val dailyScore = (
-            workoutScore +
-                    nutritionScore +
-                    missionScore
-            ).coerceIn(0, 100)
+    val dailyScore = calculateDailyScore(
+        workoutScore = workoutScore,
+        nutritionScore = nutritionScore,
+        missionScore = missionScore
+    )
 
     val dailyScores = loadDailyScores()
     dailyScores[todayKey] = dailyScore
